@@ -267,70 +267,89 @@ function filterTransactions() {
 function initChart() {
     const ctx = elements.chartCanvas.getContext('2d');
 
-    chart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: [],
-            datasets: [{
-                data: [],
-                backgroundColor: [
-                    '#ef4444',
-                    '#f97316',
-                    '#f59e0b',
-                    '#eab308',
-                    '#84cc16',
-                    '#22c55e',
-                    '#10b981',
-                    '#14b8a6',
-                    '#06b6d4',
-                    '#0ea5e9',
-                    '#3b82f6',
-                    '#6366f1',
-                    '#8b5cf6',
-                    '#a855f7',
-                    '#d946ef',
-                    '#ec4899'
-                ],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#cbd5e1',
-                        padding: 15,
-                        font: {
-                            size: 12
+    if (typeof Chart === 'undefined') {
+        console.error("Error: Chart.js no se pudo cargar.");
+        return;
+    }
+
+    try {
+        chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: [
+                        '#ef4444',
+                        '#f97316',
+                        '#f59e0b',
+                        '#eab308',
+                        '#84cc16',
+                        '#22c55e',
+                        '#10b981',
+                        '#14b8a6',
+                        '#06b6d4',
+                        '#0ea5e9',
+                        '#3b82f6',
+                        '#6366f1',
+                        '#8b5cf6',
+                        '#a855f7',
+                        '#d946ef',
+                        '#ec4899'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#cbd5e1',
+                            padding: 15,
+                            font: {
+                                size: 12
+                            }
                         }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function (context) {
-                            const label = context.label || '';
-                            const value = formatCurrency(context.parsed);
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((context.parsed / total) * 100).toFixed(1);
-                            return `${label}: ${value} (${percentage}%)`;
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const label = context.label || '';
+                                const value = formatCurrency(context.parsed);
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
+    } catch (error) {
+        console.error("Error al crear el gráfico:", error);
+    }
 }
 
 function updateChart() {
+
+
+    if (!chart) {
+        console.error("❌ El gráfico no está inicializado. Intentando reinicializar...");
+        initChart();
+        if (!chart) return;
+    }
+
     const expenses = transactions.filter(t => t.type === 'expense');
 
+
     if (expenses.length === 0) {
+
         chart.data.labels = ['Sin gastos'];
         chart.data.datasets[0].data = [1];
-        chart.data.datasets[0].backgroundColor = ['#334155'];
+        chart.data.datasets[0].backgroundColor = ['#334155']; // Color gris oscuro
         chart.update();
         return;
     }
@@ -344,6 +363,8 @@ function updateChart() {
         }
         expensesByCategory[category] += transaction.amount;
     });
+
+
 
     // Preparar datos para el gráfico
     const labels = Object.keys(expensesByCategory).map(cat =>
@@ -361,7 +382,13 @@ function updateChart() {
     chart.data.labels = labels;
     chart.data.datasets[0].data = data;
     chart.data.datasets[0].backgroundColor = backgroundColors; // Restaurar colores
-    chart.update();
+
+    try {
+        chart.update();
+
+    } catch (err) {
+        console.error("Error al actualizar visualmente el gráfico:", err);
+    }
 }
 
 // ===== Iniciar la aplicación =====
@@ -374,3 +401,4 @@ if ('serviceWorker' in navigator) {
         // navigator.serviceWorker.register('/sw.js');
     });
 }
+

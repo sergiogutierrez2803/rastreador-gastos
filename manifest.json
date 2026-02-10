@@ -2,7 +2,7 @@
     "name": "Rastreador de Gastos",
     "short_name": "Gastos",
     "description": "Aplicación para rastrear tus gastos e ingresos personales",
-    "start_url": "/",
+    "start_url": ".",
     "display": "standalone",
     "background_color": "#0f172a",
     "theme_color": "#8b5cf6",

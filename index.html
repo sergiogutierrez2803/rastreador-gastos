@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="description" content="Rastreador de gastos e ingresos personales">
+    <title>💰 Rastreador de Gastos</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="./styles.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="header-title">💰 Mis Finanzas</h1>
+            <div class="balance-card">
+                <p class="balance-label">Balance Total</p>
+                <h2 class="balance-amount" id="totalBalance">$0.00</h2>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+
+            <!-- Dashboard Cards -->
+            <section class="dashboard">
+                <div class="stat-card income-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Ingresos</p>
+                        <p class="stat-value" id="totalIncome">$0.00</p>
+                    </div>
+                </div>
+
+                <div class="stat-card expense-card">
+                    <div class="stat-icon">📉</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Gastos</p>
+                        <p class="stat-value" id="totalExpense">$0.00</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Formulario de Nueva Transacción -->
+            <section class="transaction-form-section">
+                <h2 class="section-title">➕ Nueva Transacción</h2>
+                <form id="transactionForm" class="transaction-form">
+                    <div class="form-group">
+                        <label for="type">Tipo</label>
+                        <select id="type" name="type" required>
+                            <option value="income">💰 Ingreso</option>
+                            <option value="expense" selected>💸 Gasto</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Categoría</label>
+                        <select id="category" name="category" required>
+                            <!-- Se llenará dinámicamente -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Monto</label>
+                        <input type="number" id="amount" name="amount" step="0.01" min="0.01" placeholder="0.00"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Descripción</label>
+                        <input type="text" id="description" name="description" placeholder="Ej: Almuerzo en restaurante"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Fecha</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <span>Agregar Transacción</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Gráfico de Gastos -->
+            <section class="chart-section">
+                <h2 class="section-title">📊 Gastos por Categoría</h2>
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Filtros -->
+            <section class="filters-section">
+                <h2 class="section-title">🔍 Transacciones</h2>
+                <div class="filters">
+                    <select id="filterType" class="filter-select">
+                        <option value="all">Todas</option>
+                        <option value="income">Ingresos</option>
+                        <option value="expense">Gastos</option>
+                    </select>
+
+                    <select id="filterCategory" class="filter-select">
+                        <option value="all">Todas las categorías</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Lista de Transacciones -->
+            <section class="transactions-section">
+                <div id="transactionsList" class="transactions-list">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <p>No hay transacciones aún</p>
+                    <p class="empty-subtitle">Agrega tu primera transacción arriba</p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Hecho con 💜 para tus finanzas personales</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="./app.js"></script>
+</body>
+
+</html>

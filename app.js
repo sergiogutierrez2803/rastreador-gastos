@@ -351,8 +351,16 @@ function updateChart() {
     );
     const data = Object.values(expensesByCategory);
 
+    // Colores específicos para categorías
+    const backgroundColors = [
+        '#ef4444', '#f97316', '#f59e0b', '#eab308',
+        '#84cc16', '#22c55e', '#10b981', '#14b8a6',
+        '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1'
+    ];
+
     chart.data.labels = labels;
     chart.data.datasets[0].data = data;
+    chart.data.datasets[0].backgroundColor = backgroundColors; // Restaurar colores
     chart.update();
 }
 
